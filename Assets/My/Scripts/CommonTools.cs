@@ -28,7 +28,7 @@ public static class CommonTools
         for (int i = 0; i < vector3List.Count; i++)
         {
             result[i] = vector3List[i];
-        }    
+        }
 
         return result;
     }

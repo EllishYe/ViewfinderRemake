@@ -5,10 +5,10 @@ using UnityEngine;
 public partial class CaptureRebuild : MonoBehaviour
 {
     public Camera viewCamera;
-    // public Camera skyboxCamera;
+    public Camera skyboxCamera;
     public Transform captureRoot;
     public Transform rebuildRoot;
-    // public GameObject skyboxPanelPrefab;
+    public GameObject skyboxPanelPrefab;
 
     private Plane[] frustumPlanes = new Plane[6];
 
@@ -18,7 +18,7 @@ public partial class CaptureRebuild : MonoBehaviour
 
         CutObjectMeshInFrustum();
 
-        //CutSkyboxInFrustum();
+        CutSkyboxInFrustum();
 
         captureRoot.localScale = Vector3.zero;
     }
@@ -37,7 +37,6 @@ public partial class CaptureRebuild : MonoBehaviour
 
     private void CutObjectMeshInFrustum()
     {
-        
         for(int i = 0; i < captureRoot.childCount; i++)
         {
             Destroy(captureRoot.GetChild(i).gameObject);
@@ -46,7 +45,7 @@ public partial class CaptureRebuild : MonoBehaviour
         frustumPlanes = GeometryUtility.CalculateFrustumPlanes(viewCamera);
 
         IEnumerable capturableObjects =
-            FindObjectsByType<Capturable>(FindObjectsSortMode.InstanceID).Where(a =>
+            FindObjectsOfType<Capturable>().Where(a =>
             {
                 return a.GetComponent<Capturable>().isCapturable &&
                 a.TryGetComponent(out Renderer renderer) &&
@@ -72,7 +71,6 @@ public partial class CaptureRebuild : MonoBehaviour
         }
     }
 
-    /*
     private void CutSkyboxInFrustum()
     {
         Texture2D skyboxTexture = CommonTools.GetCameraTexture(skyboxCamera);
@@ -81,14 +79,13 @@ public partial class CaptureRebuild : MonoBehaviour
         skyboxPanel.GetComponent<MeshRenderer>().materials[0].SetTexture("_BaseMap", skyboxTexture);
         skyboxPanel.AddComponent<Capturable>().isCapturable = false;
     }
-    */
 
     private void DestroyObjectMeshInFrustum()
     {
         frustumPlanes = GeometryUtility.CalculateFrustumPlanes(viewCamera);
 
         IEnumerable capturableObjects =
-            FindObjectsByType<Capturable>(FindObjectsSortMode.InstanceID).Where(a =>
+            FindObjectsOfType<Capturable>().Where(a =>
             {
                 return a.GetComponent<Capturable>().isCapturable &&
                 a.TryGetComponent(out Renderer renderer) &&
